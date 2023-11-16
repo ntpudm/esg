@@ -39,7 +39,7 @@
 	  // 然後讓程式讀取 https://docs.google.com/spreadsheets/d/瀏覽器網址列上的網址擷取序號部分/gviz/tq?sheet=工作表名稱
 	  // 也就是將下列的 1KDOGFsYii0ugEJdjSg5pi7VxqrWumadqhn1dt1Le8c0 更換成自己的檔案序號，以及最後部分指讀取哪個工作表。
 	  var url =
-		'https://docs.google.com/spreadsheets/d/1O_8KabaC6g-JXar_4wyUrQ5dus7JqMmYPACtbeZY5g4/gviz/tq?headers=0&sheet=表單回應 1';
+		'https://docs.google.com/spreadsheets/d/1O_8KabaC6g-JXar_4wyUrQ5dus7JqMmYPACtbeZY5g4/gviz/tq?sheet=表單回應 1';
 	  var query = new google.visualization.Query(url);
 	  query.setQuery('select *');
 	  query.send(processSheetsData);
