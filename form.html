@@ -58,9 +58,9 @@
 	  for (var c=11 ; c<columns ; c++) {	
 		  if (data.getFormattedValue(1,c)=='') columns=c; //可能試算表後面有多欄空白，就要將columns數值訂為到此為止
 		  else if (data.getFormattedValue(0,c)=="")
-                         str +=			'<th>' + '分數' + '</th>';			            
+                         str +=	'<th>' + '<center>分數</center>' + '</th>';			            
                   else
-			 str +=			'<th>' + data.getFormattedValue(0,c) + '</th>';			
+			 str +=	'<th>' + '<center>' + data.getFormattedValue(0,c) + '</center>' + '</th>';			
 	  }  
 	  // 後續的Tag...........
 		  str += `		</tr>
