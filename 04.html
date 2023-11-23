@@ -45,21 +45,16 @@
 	  var data = response.getDataTable();
 	  var rows = data.getNumberOfRows();
           const displayColumns = [0,11,12,13];
-
+          const titles = ['答題時間', '獲得分數／總分', '電子郵件', '手機號碼'];
+		
 	  // 表格以DataTable呈現設定class="display order-column"
 	  var str = `<table id="myTable" class="display order-column">
 					<thead>
 						<tr>`;
-	  // 此迴圈重新設定試算表第一列的欄位0,11,12要顯示在網頁的標題
-          for (var i = 0; i < displayColumns.length; i++) {
-     	      var c = displayColumns[i];
-              if (c==0)
-                  str +=	'<th>' + '<center>答題時間</center>' + '</th>';
-              else if (c==11)
-                  str +=	'<th>' + '<center>獲得分數／總分</center>' + '</th>';
-              else if (c==12)
-                  str +=	'<th>' + '<center>電子郵件</center>' + '</th>';	
-	  } 
+	  // 此迴圈設定排行榜的表格標題
+          for (let c = 0; c < titles.length; c++) {
+              str += `<th><center>${titles[c]}</center></th>`;
+          }
 	  // 後續的Tag...........
 		  str += `		</tr>
 					</thead>
