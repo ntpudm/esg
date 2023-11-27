@@ -27,70 +27,87 @@
     <!-- 利用Google Visualization讀取Google Sheet https://www.labnol.org/code/google-sheet-d3js-visualization-200608 -->
     <script src="https://www.gstatic.com/charts/loader.js"></script>
     <script>
-    // https://developers.google.com/chart/interactive/docs/quick_start
-    // Load the Visualization API and the corechart package.
-    google.charts.load('current', {'packages':['corechart']});
-    // Set a callback to run when the Google Visualization API is loaded.	
-	google.charts.setOnLoadCallback(init);
+        // 利用DataTable呈現表格 https://datatables.net/manual/installation
+        $(document).ready( function () {
+            
+            // https://developers.google.com/chart/interactive/docs/quick_start
+            // Load the Visualization API and the corechart package.
+            google.charts.load('current', {'packages':['corechart']});
+            // Set a callback to run when the Google Visualization API is loaded.	
+            google.charts.setOnLoadCallback(check_valid);
+        });
 
-	function init() {
-	  // 程式讀取 https://docs.google.com/spreadsheets/d/瀏覽器網址列上的網址擷取序號部分/gviz/tq?sheet=工作表名稱
-	  var url = 'https://docs.google.com/spreadsheets/d/1O_8KabaC6g-JXar_4wyUrQ5dus7JqMmYPACtbeZY5g4/gviz/tq?headers=0&sheet=表單回應 1';
-	  var query = new google.visualization.Query(url);
-	  query.setQuery('select *');
-	  query.send(processSheetsData);
-	}	
+        function check_valid() {
+            var activity_url = 'https://docs.google.com/spreadsheets/d/1Ut69zzJmVP9sZjGnHQ5l8DEz2rYXbUd9rSQVfKmZ9Dw/gviz/tq?headers=0&sheet=auth'
+            var query = new google.visualization.Query(activity_url);
+            query.setQuery('select *');
+            query.send(set_form_if_valid);
+        }
+
+        function init() {
+            // 程式讀取 https://docs.google.com/spreadsheets/d/瀏覽器網址列上的網址擷取序號部分/gviz/tq?sheet=工作表名稱
+            var url = 'https://docs.google.com/spreadsheets/d/1O_8KabaC6g-JXar_4wyUrQ5dus7JqMmYPACtbeZY5g4/gviz/tq?headers=0&sheet=表單回應 1';
+            var query = new google.visualization.Query(url);
+            query.setQuery('select *');
+            query.send(processSheetsData);
+        }	
+
+        function set_form_if_valid(response) {
+            var flg = response.getDataTable().getFormattedValue(0,1);
+            if (flg=="FALSE") {
+                document.getElementById("demo").parentElement.innerHTML=`<p>請稍等，問答活動還沒開始喔~</p>`;
+            } else {
+                document.getElementById("demo").parentElement.innerHTML=`
+                    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfX1RY23DR1tlvyyutGfydtp7FEIOX53n33mVXNe3HICmk3jg/viewform?embedded=true" width="640" height="3394" frameborder="0" marginheight="0" marginwidth="0">載入中…</iframe>
+                    <div id="demo"></div>`;
+                google.charts.setOnLoadCallback(init);
+            }
+        }
 	
-	function processSheetsData(response) {
-	  var data = response.getDataTable();
-	  var rows = data.getNumberOfRows();
-          const displayColumns = [0,11,12,13];
-          const titles = ['答題時間', '獲得分數／總分', '電子郵件', '手機號碼'];
-		
-	  // 表格以DataTable呈現設定class="display order-column"
-	  var str = `<table id="myTable" class="display order-column">
-					<thead>
-						<tr>`;
-	  // 此迴圈設定排行榜的表格標題
-          for (let c = 0; c < titles.length; c++) {
-              str += `<th><center>${titles[c]}</center></th>`;
-          }
-	  // 後續的Tag...........
-		  str += `		</tr>
-					</thead>
-					<tbody>`;
+        function processSheetsData(response) {
+            var data = response.getDataTable();
+            var rows = data.getNumberOfRows();
+                const displayColumns = [0,11,12,13];
+                const titles = ['答題時間', '獲得分數／總分', '電子郵件', '手機號碼'];
+                
+            // 表格以DataTable呈現設定class="display order-column"
+            var str = `<table id="myTable" class="display order-column">
+                            <thead>
+                                <tr>`;
+            // 此迴圈設定排行榜的表格標題
+                for (let c = 0; c < titles.length; c++) {
+                    str += `<th><center>${titles[c]}</center></th>`;
+                }
+            // 後續的Tag...........
+                str += `		</tr>
+                            </thead>
+                            <tbody>`;
 
-	  // 此迴圈取得試算表第二列起的資料逐一安排呈現
-	  for (var r=1 ; r<rows ; r++) {
-	      str += '<tr>';
-              for (var i = 0; i < displayColumns.length; i++) {
-     	          var c=displayColumns[i];    
-		  // 試算表第r列的欄位12，內容為電子郵件地址，故加入mailto超連結
-		  if (c==12)
-                      str += '<td><a href="mailto:' + data.getFormattedValue(r,c) + '" target="_blank">' + data.getFormattedValue(r,c) + '</a></td>';
-		  else
-		      str += '<td>' + data.getFormattedValue(r,c) + '</td>';		  
-          }
-          // 後續的Tag...
-		  str += '</tr>';          
-	  }	  
-	  str += '</tbody></table>';
-	  
-	  document.getElementById("demo").innerHTML = str;
+            // 此迴圈取得試算表第二列起的資料逐一安排呈現
+            for (var r=1 ; r<rows ; r++) {
+                str += '<tr>';
+                    for (var i = 0; i < displayColumns.length; i++) {
+                        var c=displayColumns[i];    
+                // 試算表第r列的欄位12，內容為電子郵件地址，故加入mailto超連結
+                if (c==12)
+                            str += '<td><a href="mailto:' + data.getFormattedValue(r,c) + '" target="_blank">' + data.getFormattedValue(r,c) + '</a></td>';
+                else
+                    str += '<td>' + data.getFormattedValue(r,c) + '</td>';		  
+                }
+                // 後續的Tag...
+                str += '</tr>';          
+            }	  
+            str += '</tbody></table>';
+            
+            document.getElementById("demo").innerHTML = str;
 
-	  
-	  // 利用DataTable呈現表格 https://datatables.net/manual/installation
-	  $(document).ready( function () {
-		  $('#myTable').DataTable({
-		    // Language Plug-in for Chinese-traditional https://datatables.net/plug-ins/i18n/Chinese-traditional.html
-		  	language: {url: '//cdn.datatables.net/plug-ins/1.13.4/i18n/zh-HANT.json'},
-			// Disable ordering in the table https://datatables.net/reference/option/ordering
-			ordering: false
-	  	  });
-	  } );	  
-	  
-	}
-	
+            $('#myTable').DataTable({
+                // Language Plug-in for Chinese-traditional https://datatables.net/plug-ins/i18n/Chinese-traditional.html
+                language: {url: '//cdn.datatables.net/plug-ins/1.13.4/i18n/zh-HANT.json'},
+                // Disable ordering in the table https://datatables.net/reference/option/ordering
+                ordering: false
+            });
+        }
 	</script>
 </head>
 <body>
@@ -129,8 +146,7 @@
 
     <section class="text-center bg-light testimonials">
         <div class="container">
-            <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfX1RY23DR1tlvyyutGfydtp7FEIOX53n33mVXNe3HICmk3jg/viewform?embedded=true" width="640" height="3394" frameborder="0" marginheight="0" marginwidth="0">載入中…</iframe>
-            <div id="demo"></div> 
+            <div id="demo">加載中...</div> 
 	</div>
     </section>
     
