@@ -55,9 +55,9 @@
         function set_form_if_valid(response) {
             var flg = response.getDataTable().getFormattedValue(0,1);
             if (flg=="FALSE") {
-                google.charts.setOnLoadCallback(init);
+                document.getElementById("demo").parentElement.innerHTML=`請稍等，問答活動還沒開始喔~`;
             } else {
-                document.getElementById("demo").parentElement().innerHTML="請稍等，問答活動還沒開始喔~";
+                google.charts.setOnLoadCallback(init);
             }
         }
 	
