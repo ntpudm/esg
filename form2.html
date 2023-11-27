@@ -55,8 +55,11 @@
         function set_form_if_valid(response) {
             var flg = response.getDataTable().getFormattedValue(0,1);
             if (flg=="FALSE") {
-                document.getElementById("demo").parentElement.innerHTML=`請稍等，問答活動還沒開始喔~`;
+                document.getElementById("demo").parentElement.innerHTML=`<p>請稍等，問答活動還沒開始喔~</p>`;
             } else {
+                document.getElementById("demo").parentElement.innerHTML=`
+                    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfX1RY23DR1tlvyyutGfydtp7FEIOX53n33mVXNe3HICmk3jg/viewform?embedded=true" width="640" height="3394" frameborder="0" marginheight="0" marginwidth="0">載入中…</iframe>
+                    <div id="demo"></div>`;
                 google.charts.setOnLoadCallback(init);
             }
         }
@@ -143,9 +146,8 @@
 
     <section class="text-center bg-light testimonials">
         <div class="container">
-            <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfX1RY23DR1tlvyyutGfydtp7FEIOX53n33mVXNe3HICmk3jg/viewform?embedded=true" width="640" height="3394" frameborder="0" marginheight="0" marginwidth="0">載入中…</iframe>
             <div id="demo"></div> 
-	    </div>
+	</div>
     </section>
     
     <section class="text-center text-white call-to-action" style="background:url(&quot;assets/img/bg-masthead.jpg&quot;) no-repeat center center;background-size:cover;">
