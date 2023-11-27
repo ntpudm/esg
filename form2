@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html data-bs-theme="light" lang="zh-Hant">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>淨零X永續</title>
+    <meta name="description" content="淨零碳排放、永續發展目標">
+    <script type="application/ld+json">
+        {
+            "@context": "http://schema.org",
+            "@type": "WebSite",
+            "name": "淨零X永續",
+            "url": "https://www.0xae.com"
+        }
+    </script>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic&amp;display=swap">
+    <link rel="stylesheet" href="assets/fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/fonts/simple-line-icons.min.css">
+    <link rel="stylesheet" href="assets/css/animate.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha512-pumBsjNRGGqkPzKHndZMaAG+bir374sORyzM3uulLV14lN5LyykqNk8eEeUlUkB3U0M4FApyaHraT65ihJhDpQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	
+    <!-- 利用DataTable呈現表格 https://datatables.net/manual/installation -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css" />	  
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>  
+    
+    <!-- 利用Google Visualization讀取Google Sheet https://www.labnol.org/code/google-sheet-d3js-visualization-200608 -->
+    <script src="https://www.gstatic.com/charts/loader.js"></script>
+    <script>
+        // 利用DataTable呈現表格 https://datatables.net/manual/installation
+        $(document).ready( function () {
+            
+            // https://developers.google.com/chart/interactive/docs/quick_start
+            // Load the Visualization API and the corechart package.
+            google.charts.load('current', {'packages':['corechart']});
+            // Set a callback to run when the Google Visualization API is loaded.	
+            google.charts.setOnLoadCallback(check_valid);
+        });
+
+        function check_valid() {
+            var activity_url = 'https://docs.google.com/spreadsheets/d/1Ut69zzJmVP9sZjGnHQ5l8DEz2rYXbUd9rSQVfKmZ9Dw/gviz/tq?headers=0&sheet=auth'
+            var query = new google.visualization.Query(activity_url);
+            query.setQuery('select *');
+            query.send(set_form_if_valid);
+        }
+
+        function init() {
+            // 程式讀取 https://docs.google.com/spreadsheets/d/瀏覽器網址列上的網址擷取序號部分/gviz/tq?sheet=工作表名稱
+            var url = 'https://docs.google.com/spreadsheets/d/1O_8KabaC6g-JXar_4wyUrQ5dus7JqMmYPACtbeZY5g4/gviz/tq?headers=0&sheet=表單回應 1';
+            var query = new google.visualization.Query(url);
+            query.setQuery('select *');
+            query.send(processSheetsData);
+        }	
+
+        function set_form_if_valid(response) {
+            var flg = response.getDataTable().getFormattedValue(1,2);
+            console.log(flg);
+            if (flg) {
+                google.charts.setOnLoadCallback(init);
+            } else {
+                document.getElementById("demo").parentElement().innerHTML="請稍等，問答活動還沒開始喔~";
+            }
+        }
+	
+        function processSheetsData(response) {
+            var data = response.getDataTable();
+            var rows = data.getNumberOfRows();
+                const displayColumns = [0,11,12,13];
+                const titles = ['答題時間', '獲得分數／總分', '電子郵件', '手機號碼'];
+                
+            // 表格以DataTable呈現設定class="display order-column"
+            var str = `<table id="myTable" class="display order-column">
+                            <thead>
+                                <tr>`;
+            // 此迴圈設定排行榜的表格標題
+                for (let c = 0; c < titles.length; c++) {
+                    str += `<th><center>${titles[c]}</center></th>`;
+                }
+            // 後續的Tag...........
+                str += `		</tr>
+                            </thead>
+                            <tbody>`;
+
+            // 此迴圈取得試算表第二列起的資料逐一安排呈現
+            for (var r=1 ; r<rows ; r++) {
+                str += '<tr>';
+                    for (var i = 0; i < displayColumns.length; i++) {
+                        var c=displayColumns[i];    
+                // 試算表第r列的欄位12，內容為電子郵件地址，故加入mailto超連結
+                if (c==12)
+                            str += '<td><a href="mailto:' + data.getFormattedValue(r,c) + '" target="_blank">' + data.getFormattedValue(r,c) + '</a></td>';
+                else
+                    str += '<td>' + data.getFormattedValue(r,c) + '</td>';		  
+                }
+                // 後續的Tag...
+                str += '</tr>';          
+            }	  
+            str += '</tbody></table>';
+            console.log(str);
+            
+            document.getElementById("demo").innerHTML = str;
+
+            $('#myTable').DataTable({
+                // Language Plug-in for Chinese-traditional https://datatables.net/plug-ins/i18n/Chinese-traditional.html
+                language: {url: '//cdn.datatables.net/plug-ins/1.13.4/i18n/zh-HANT.json'},
+                // Disable ordering in the table https://datatables.net/reference/option/ordering
+                ordering: false
+            });
+        }
+	</script>
+</head>
+<body>
+    <script id="653d1b65e54745649a42b6d9" src="https://dashboard.chatfuel.com/integration/entry-point.js" async defer></script>
+    <nav class="navbar navbar-expand-lg fixed-top portfolio-navbar gradient navbar-dark">
+        <div class="container"><a class="navbar-brand logo" href="#">淨零X永續</a><button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navbarNav"><span class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="https://www.0xae.com">首頁</a></li>
+                    <li class="nav-item"><a class="nav-link" href="01.html">能源與生活</a></li>
+                    <li class="nav-item"><a class="nav-link" href="02.html">冷氣與空調</a></li>
+                    <li class="nav-item"><a class="nav-link" href="03.html">永續供應鏈</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="form.html">趣味競賽</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <header class="text-center text-white masthead" style="background:url('assets/img/bg-masthead.jpg')no-repeat center center;background-size:cover;">
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-9 mx-auto position-relative">
+                    <h1 class="mb-5">淨零X永續</h1><h2 class="mb-5">別讓藍天綠地成為回憶</h2>
+                </div>
+                <div class="col-md-10 col-lg-8 col-xl-7 mx-auto position-relative">
+                    <form>
+                        <div class="row">
+                            <div class="col-12 col-md-9 mb-2 mb-md-0"><input class="form-control form-control-lg" type="email" placeholder="Enter your email..."></div>
+                            <div class="col-12 col-md-3"><button class="btn btn-primary btn-lg" type="submit"><strong>立即加入!</strong></button></div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section class="text-center bg-light testimonials">
+        <div class="container">
+            <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfX1RY23DR1tlvyyutGfydtp7FEIOX53n33mVXNe3HICmk3jg/viewform?embedded=true" width="640" height="3394" frameborder="0" marginheight="0" marginwidth="0">載入中…</iframe>
+            <div id="demo"></div> 
+	    </div>
+    </section>
+    
+    <section class="text-center text-white call-to-action" style="background:url(&quot;assets/img/bg-masthead.jpg&quot;) no-repeat center center;background-size:cover;">
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-9 mx-auto position-relative">
+                    <h2 class="mb-4">Ready to get started? Join us!</h2>
+                </div>
+                <div class="col-md-10 col-lg-8 col-xl-7 mx-auto position-relative">
+                    <form>
+                        <div class="row">
+                            <div class="col-12 col-md-9 mb-2 mb-md-0"><input class="form-control form-control-lg" type="email" placeholder="Enter your email..."></div>
+                            <div class="col-12 col-md-3"><button class="btn btn-primary btn-lg" type="submit">Join!</button></div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    <footer class="bg-light footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 text-center text-lg-start my-auto h-100">
+                    <ul class="list-inline mb-2">
+                        <li class="list-inline-item"><a href="#">About</a></li>
+                        <li class="list-inline-item"><span>⋅</span></li>
+                        <li class="list-inline-item"><a href="#">Contact</a></li>
+                        <li class="list-inline-item"><span>⋅</span></li>
+                        <li class="list-inline-item"><a href="#">Terms of &nbsp;Use</a></li>
+                        <li class="list-inline-item"><span>⋅</span></li>
+                        <li class="list-inline-item"><a href="#">Privacy Policy</a></li>
+                    </ul>
+                    <p class="text-muted small mb-4 mb-lg-0">© 2023 淨零X永續</p>
+                </div>
+                <div class="col-lg-6 text-center text-lg-end my-auto h-100">
+                    <ul class="list-inline mb-0">
+                        <li class="list-inline-item"><a href="https://www.facebook.com/zeroxesg/"><i class="fa fa-facebook fa-2x fa-fw"></i></a></li>
+                        <li class="list-inline-item"><a href="https://www.youtube.com/@zeroxesg"><i class="fa fa-youtube fa-2x fa-fw"></i></a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+</body>
+</html>
