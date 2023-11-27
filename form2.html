@@ -53,7 +53,7 @@
         }	
 
         function set_form_if_valid(response) {
-            var flg = response.getDataTable().getFormattedValue(1,2);
+            var flg = response.getDataTable().getFormattedValue(0,1);
             console.log(flg);
             if (flg) {
                 google.charts.setOnLoadCallback(init);
