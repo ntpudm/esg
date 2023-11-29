@@ -18,3 +18,7 @@
   width: 95%;
 }
 
+.text-center .container p {
+  font-size: 16px;
+}
+
