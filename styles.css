@@ -2,13 +2,15 @@
 .text-center .container .odd {
   float: left;
   clear: both; /* 清除浮動 */
-  width: 50%;
+  text-align: left;
+  width: 80%;
 }
 
 /* 將 2. 4. 6. 靠右排列 */
 .text-center .container .even {
   float: right;
   clear: both; /* 清除浮動 */
-  width: 50%;
+  text-align: right;
+  width: 80%;
 }
 
