@@ -1,10 +1,12 @@
 /* 將 1. 3. 5. 靠左排列 */
 .text-center .container .odd {
   float: left;
+  clear: both; /* 清除浮動 */
 }
 
 /* 將 2. 4. 6. 靠右排列 */
 .text-center .container .even {
   float: right;
+  clear: both; /* 清除浮動 */
 }
 
