@@ -1,3 +1,7 @@
+.text-center .container {
+   width: 80%; 
+}
+
 /* 靠左排列 */
 .text-center .container .odd {
   float: left;
