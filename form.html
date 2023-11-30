@@ -64,30 +64,30 @@
             google.charts.setOnLoadCallback(init);
         }
 
-        function get_info_by_phone_num(){
-            var phone_num=document.getElementById("phone_search").val;
-            var url = 'https://docs.google.com/spreadsheets/d/1rexUdix3Rb4QcWqASdGJD6rm_VGnnu7HiyB5lrOB_64/gviz/tq?headers=0&sheet=表單回應 1';
-            var query = new google.visualization.Query(url);
-            query.setQuery('select * where C = ' + phone_num);
-            query.send(get_user);
+     //    function get_info_by_phone_num(){
+     //        var phone_num=document.getElementById("phone_search").val;
+     //        var url = 'https://docs.google.com/spreadsheets/d/1rexUdix3Rb4QcWqASdGJD6rm_VGnnu7HiyB5lrOB_64/gviz/tq?headers=0&sheet=表單回應 1';
+     //        var query = new google.visualization.Query(url);
+     //        query.setQuery('select * where C = ' + phone_num);
+     //        query.send(get_user);
             
-            document.getElementById("forum").innerHTML=`<label for="phone">查詢報名訊息: </label>
-                                    <input type="text" id="phone" name="phone" value="${phone_num}" disabled>
-                                    <br><br>
-                                    <button onclick="return_to_regist();">返回</button>`;
-        }
+     //        document.getElementById("forum").innerHTML=`<label for="phone">查詢報名訊息: </label>
+     //                                <input type="text" id="phone" name="phone" value="${phone_num}" disabled>
+     //                                <br><br>
+     //                                <button onclick="return_to_regist();">返回</button>`;
+     //    }
         
-        function return_to_regist(){
-            document.getElementById("forum").innerHTML=`<label for="phone_search">查詢報名訊息: </label>
-                                    <input type="text" id="phone_search" name="phone_search">
-                                    <button onclick="get_info_by_phone_num();">查詢</button>
-                                            <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSci9zVFfIKpGVD-AluszPhgXCZEIqalOTmll4kdr3xNsejnsw/viewform?embedded=true" width="640" height="2173" frameborder="0" marginheight="0" marginwidth="0">載入中…</iframe>`;
-        }
+     //    function return_to_regist(){
+     //        document.getElementById("forum").innerHTML=`<label for="phone_search">查詢報名訊息: </label>
+     //                                <input type="text" id="phone_search" name="phone_search">
+     //                                <button onclick="get_info_by_phone_num();">查詢</button>
+     //                                        <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSci9zVFfIKpGVD-AluszPhgXCZEIqalOTmll4kdr3xNsejnsw/viewform?embedded=true" width="640" height="2173" frameborder="0" marginheight="0" marginwidth="0">載入中…</iframe>`;
+     //    }
 
-        function get_user(response){
-            var data = response.getDataTable();
-	    console.log(data);
-        }
+     //    function get_user(response){
+     //        var data = response.getDataTable();
+	    // console.log(data);
+     //    }
         
         function processSheetsData(response) {
             var data = response.getDataTable();
