@@ -46,7 +46,7 @@
 
         function init() {
             // 程式讀取 https://docs.google.com/spreadsheets/d/瀏覽器網址列上的網址擷取序號部分/gviz/tq?sheet=工作表名稱
-            var url = 'https://docs.google.com/spreadsheets/d/1O_8KabaC6g-JXar_4wyUrQ5dus7JqMmYPACtbeZY5g4/gviz/tq?headers=0&sheet=表單回應 1';
+            var url = 'https://docs.google.com/spreadsheets/d/1fnljaa-WlCUU1F_s2PPDTPh5Ix8IshusvQj11e1oNUU/gviz/tq?headers=0&sheet=表單回應 1';
             var query = new google.visualization.Query(url);
             query.setQuery('select *');
             query.send(processSheetsData);
@@ -67,7 +67,7 @@
             var data = response.getDataTable();
             var rows = data.getNumberOfRows();
                 const displayColumns = [0,11,12,13];
-                const titles = ['提交時間', '獲得分數／總分', '電子郵件', '手機號碼'];
+                const titles = ['提交時間', '獲得分數／總分', '手機號碼'];
                 
             // 表格以DataTable呈現設定class="display order-column"
             var str = `<table id="myTable" class="display order-column">
