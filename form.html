@@ -57,7 +57,7 @@
             var flg = response.getDataTable().getFormattedValue(0,1);
             if (flg=="FALSE") {
                  document.getElementById("forum").innerHTML=`<div><label for="phone_search">查詢報名訊息: </label>
-		 					     <input type="text" id="phone_search" name="phone_search">
+		 					     <input type="text" id="phone_search" name="phone_search" maxlength="10">
          						     <button onclick="get_info_by_phone_num()">查詢</button></div>
                     <div><iframe src="https://docs.google.com/forms/d/e/1FAIpQLSci9zVFfIKpGVD-AluszPhgXCZEIqalOTmll4kdr3xNsejnsw/viewform?embedded=true" width="640" height="2173" frameborder="0" marginheight="0" marginwidth="0">載入中…</iframe></div>`;
             } else {
@@ -78,7 +78,7 @@
         function return_to_regist(){
 	    phone_num="";
             document.getElementById("forum").innerHTML=`<div><label for="phone_search">查詢報名訊息: </label>
-                                    <input type="text" id="phone_search" name="phone_search">
+                                    <input type="text" id="phone_search" name="phone_search" maxlength="10">
                                     <button onclick="get_info_by_phone_num();">查詢</button></div>
                                             <div><iframe src="https://docs.google.com/forms/d/e/1FAIpQLSci9zVFfIKpGVD-AluszPhgXCZEIqalOTmll4kdr3xNsejnsw/viewform?embedded=true" width="640" height="2173" frameborder="0" marginheight="0" marginwidth="0">載入中…</iframe></div>`;
         }
@@ -92,16 +92,16 @@
                                     <br><br>
                                     <button onclick="return_to_regist();">立即註冊</button>`;
 	    } else {
-		    document.getElementById("forum").innerHTML=`<label for="phone">查詢報名訊息: </label>
+		    document.getElementById("forum").innerHTML=`<label for="phone">查詢報名訊息: &emsp; </label>
                                     <input type="text" id="phone" name="phone" value="${phone_num}" disabled>
-				    <br>
+				    <br><br>
 				    <label style="color:green">已註冊</label>
+				    <br><br>
+				    <label for="mail">註冊時間: &emsp;</label>
+                                    <input type="text" id="time" name="time" value="${data.getFormattedValue(0,0)}" size="25" disabled>
 				    <br>
-				    <label for="mail">註冊時間: </label>
-                                    <input type="text" id="time" name="time" value="${data.getFormattedValue(0,0)}" size="30" disabled>
-				    <br>
-				    <label for="mail">註冊時間: </label>
-                                    <input type="text" id="mail" name="mail" value="${data.getFormattedValue(0,1)}" size="30" disabled>
+				    <label for="mail">註冊信箱: &emsp;</label>
+                                    <input type="text" id="mail" name="mail" value="${data.getFormattedValue(0,1)}" size="25" disabled>
                                     <br><br>
                                     <button onclick="return_to_regist();">返回</button>`;
 	    }
