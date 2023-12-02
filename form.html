@@ -87,18 +87,10 @@
         }
 
         function get_user(response){
+	    console.log(response);
             var data = response.getDataTable();
 	    // Log the data to the console
 	    console.log(data);
-	
-	    // Alternatively, you can loop through the data and print each row
-	    for (var i = 0; i < data.getNumberOfRows(); i++) {
-	        var rowData = [];
-	        for (var j = 0; j < data.getNumberOfColumns(); j++) {
-	            rowData.push(data.getValue(i, j));
-	        }
-	        console.log('Row ' + i + ': ' + rowData.join(', '));
-	    }
         }
         
         function processSheetsData(response) {
