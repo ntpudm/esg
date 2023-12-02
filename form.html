@@ -29,7 +29,6 @@
     <script>
         // 利用DataTable呈現表格 https://datatables.net/manual/installation
 	var phone_num="";
-	var activity_start=false;
         $(document).ready( function () {
             
             // https://developers.google.com/chart/interactive/docs/quick_start
@@ -40,6 +39,7 @@
         });
 
         function check_valid() {
+	    phone_num="";
             var activity_url = 'https://docs.google.com/spreadsheets/d/1GsXqxrhh3qzFD340K2o63Cem0uflzJi5-4muToQi4oA/gviz/tq?headers=0&sheet=表單'
             var query = new google.visualization.Query(activity_url);
             query.setQuery('select *');
@@ -61,11 +61,9 @@
 		 					     <input type="text" id="phone_search" name="phone_search" maxlength="10">
          						     <button onclick="get_info_by_phone_num()">查詢</button></div>
                     <div><iframe src="https://docs.google.com/forms/d/e/1FAIpQLSci9zVFfIKpGVD-AluszPhgXCZEIqalOTmll4kdr3xNsejnsw/viewform?embedded=true" width="640" height="2173" frameborder="0" marginheight="0" marginwidth="0">載入中…</iframe></div>`;
-		 activity_start=false;
             } else {
                 document.getElementById("forum").innerHTML=`
                     <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSdnaDOntdaA2lgmO9uq87pJ-EOqthW2SRR5jXaVZCFB108u5g/viewform?embedded=true" width="640" height="7751" frameborder="0" marginheight="0" marginwidth="0">載入中…</iframe>`;
-		activity_start=true;
             }
             google.charts.setOnLoadCallback(init);
         }
@@ -77,37 +75,27 @@
             query.setQuery('select * where C = \'' + phone_num + '\' order by A');
             query.send(get_user);
         }
-        
-        function return_to_regist(){
-	    phone_num="";
-            document.getElementById("forum").innerHTML=`<div><label for="phone_search">查詢報名訊息: &nbsp; </label>
-                                    <input type="text" id="phone_search" name="phone_search" maxlength="10">
-                                    <button onclick="get_info_by_phone_num();">查詢</button></div>
-                                            <div><iframe src="https://docs.google.com/forms/d/e/1FAIpQLSci9zVFfIKpGVD-AluszPhgXCZEIqalOTmll4kdr3xNsejnsw/viewform?embedded=true" width="640" height="2173" frameborder="0" marginheight="0" marginwidth="0">載入中…</iframe></div>`;
-        }
 
         function get_user(response){
             var data = response.getDataTable();
 	    // Log the data to the console
-	    if(!activity_start) {
-		    if (data.getNumberOfRows()==0) {
-			    document.getElementById("forum").innerHTML=`<label style="color:red">查無資料，手機號 &nbsp; ${phone_num} &nbsp; 尚未註冊 </label>
-	                                    <br><br>
-	                                    <button onclick="check_valid();">立即註冊</button>`;
-		    } else {
-			    document.getElementById("forum").innerHTML=`<label for="phone">查詢報名訊息: &nbsp;&nbsp; </label>
-	                                    <input type="text" id="phone" name="phone" value="${phone_num}" disabled>
-					    <br><br>
-					    <label style="color:green">已註冊</label>
-					    <br>
-					    <label for="mail">註冊時間: &nbsp;&nbsp;&nbsp; </label>
-	                                    <input type="text" id="time" name="time" value="${data.getFormattedValue(0,0)}" size="22" disabled>
-					    <br>
-					    <label for="mail">註冊信箱:  &nbsp;&nbsp;&nbsp; </label>
-	                                    <input type="text" id="mail" name="mail" value="${data.getFormattedValue(0,1)}" size="22" disabled>
-	                                    <br><br>
-	                                    <button onclick="check_valid();">返回</button>`;
-		    }
+	    if (data.getNumberOfRows()==0) {
+		    document.getElementById("forum").innerHTML=`<label style="color:red">查無資料，手機號 &nbsp; ${phone_num} &nbsp; 尚未註冊 </label>
+				    <br><br>
+				    <button onclick="check_valid();">立即註冊</button>`;
+	    } else {
+		    document.getElementById("forum").innerHTML=`<label for="phone">查詢報名訊息: &nbsp;&nbsp; </label>
+				    <input type="text" id="phone" name="phone" value="${phone_num}" disabled>
+				    <br><br>
+				    <label style="color:green">已註冊</label>
+				    <br>
+				    <label for="mail">註冊時間: &nbsp;&nbsp;&nbsp; </label>
+				    <input type="text" id="time" name="time" value="${data.getFormattedValue(0,0)}" size="22" disabled>
+				    <br>
+				    <label for="mail">註冊信箱:  &nbsp;&nbsp;&nbsp; </label>
+				    <input type="text" id="mail" name="mail" value="${data.getFormattedValue(0,1)}" size="22" disabled>
+				    <br><br>
+				    <button onclick="check_valid();">返回</button>`;
 	    }
         }
         
@@ -138,6 +126,8 @@
                 // 試算表第r列的欄位12，內容為電子郵件地址，故加入mailto超連結
                 if (c==12)
                             str += '<td><a href="mailto:' + data.getFormattedValue(r,c) + '" target="_blank">' + data.getFormattedValue(r,c) + '</a></td>';
+		else if(c==2)
+			    str += '<td>' + data.getFormattedValue(r,c).replace(/(\+\d{3})\d{4}/,"$1****") + '</td>';
                 else
                     str += '<td>' + data.getFormattedValue(r,c) + '</td>';		  
                 }
