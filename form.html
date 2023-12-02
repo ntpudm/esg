@@ -70,7 +70,7 @@
             var phone_num=$("#phone_search").val();
             var url = 'https://docs.google.com/spreadsheets/d/1rexUdix3Rb4QcWqASdGJD6rm_VGnnu7HiyB5lrOB_64/gviz/tq?headers=0&sheet=表單回應 1';
             var query = new google.visualization.Query(url);
-            query.setQuery('select A, B, C where C = \'' + phone_num + '\'');
+            query.setQuery('select * where C = \'' + phone_num + '\' order by A');
             query.send(get_user);
             
             document.getElementById("forum").innerHTML=`<label for="phone">查詢報名訊息: </label>
@@ -87,10 +87,12 @@
         }
 
         function get_user(response){
-	    console.log(response);
             var data = response.getDataTable();
 	    // Log the data to the console
 	    console.log(data);
+	    console.log(data.getFormattedValue(0,0));
+	    console.log(data.getFormattedValue(0,1));
+	    console.log(data.getFormattedValue(0,2));
         }
         
         function processSheetsData(response) {
