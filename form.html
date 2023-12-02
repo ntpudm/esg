@@ -70,7 +70,7 @@
             var phone_num=$("#phone_search").val();
             var url = 'https://docs.google.com/spreadsheets/d/1rexUdix3Rb4QcWqASdGJD6rm_VGnnu7HiyB5lrOB_64/gviz/tq?headers=0&sheet=表單回應 1';
             var query = new google.visualization.Query(url);
-            query.setQuery('select * where C = ' + phone_num);
+            query.setQuery('select A, B');
             query.send(get_user);
             
             document.getElementById("forum").innerHTML=`<label for="phone">查詢報名訊息: </label>
