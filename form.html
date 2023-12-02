@@ -88,23 +88,20 @@
 	    // Log the data to the console
 
 	    if (data.getNumberOfRows()==0) {
-		    document.getElementById("forum").innerHTML=`<label for="phone">查無資料，手機號 ${phone_num} 尚未註冊 </label>
+		    document.getElementById("forum").innerHTML=`<label style="color:red">查無資料，手機號 ${phone_num} 尚未註冊 </label>
                                     <br><br>
-                                    <button onclick="return_to_regist();">返回註冊</button>`;
+                                    <button onclick="return_to_regist();">立即註冊</button>`;
 	    } else {
-		    console.log(data);
-		    console.log(data.getFormattedValue(0,0));
-		    console.log(data.getFormattedValue(0,1));
-		    console.log(data.getFormattedValue(0,2));
 		    document.getElementById("forum").innerHTML=`<label for="phone">查詢報名訊息: </label>
                                     <input type="text" id="phone" name="phone" value="${phone_num}" disabled>
 				    <br>
+				    <label style="color:green">已註冊</label>
 				    <br>
 				    <label for="mail">註冊時間: </label>
-                                    <input type="text" id="time" name="time" value="${data.getFormattedValue(0,0)}" disabled>
+                                    <input type="text" id="time" name="time" value="${data.getFormattedValue(0,0)}" size="30" disabled>
 				    <br>
 				    <label for="mail">註冊時間: </label>
-                                    <input type="text" id="mail" name="mail" value="${data.getFormattedValue(0,1)}" disabled>
+                                    <input type="text" id="mail" name="mail" value="${data.getFormattedValue(0,1)}" size="30" disabled>
                                     <br><br>
                                     <button onclick="return_to_regist();">返回</button>`;
 	    }
