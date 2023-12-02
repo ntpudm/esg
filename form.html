@@ -127,7 +127,7 @@
                 if (c==12)
                             str += '<td><a href="mailto:' + data.getFormattedValue(r,c) + '" target="_blank">' + data.getFormattedValue(r,c) + '</a></td>';
 		else if(c==2)
-			    str += '<td>' + data.getFormattedValue(r,c).replace(/(\+\d{3})\d{4}/,"$1****") + '</td>';
+			    str += '<td>' + data.getFormattedValue(r,c).replace(/(\0\d{3})\d{4}/,"$1****") + '</td>';
                 else
                     str += '<td>' + data.getFormattedValue(r,c) + '</td>';		  
                 }
