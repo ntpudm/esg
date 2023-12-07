@@ -57,7 +57,7 @@
         function set_form_if_valid(response) {
             var flg = response.getDataTable().getFormattedValue(0,1);
             if (flg=="FALSE") {
-                 document.getElementById("forum").innerHTML=`<div><label for="phone_search">查詢報名訊息: &nbsp; </label>
+                 document.getElementById("forum").innerHTML=`<div><label for="phone_search">查詢報名訊息(請輸入手機號碼): &nbsp; </label>
 		 					     <input type="text" id="phone_search" name="phone_search" maxlength="10">
          						     <button onclick="get_info_by_phone_num()">查詢</button></div>
                     <div><iframe src="https://docs.google.com/forms/d/e/1FAIpQLSci9zVFfIKpGVD-AluszPhgXCZEIqalOTmll4kdr3xNsejnsw/viewform?embedded=true" width="640" height="2173" frameborder="0" marginheight="0" marginwidth="0">載入中…</iframe></div>`;
