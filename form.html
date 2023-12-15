@@ -28,7 +28,10 @@
     <script src="https://www.gstatic.com/charts/loader.js"></script>
     <script>
         // 利用DataTable呈現表格 https://datatables.net/manual/installation
-	var phone_num="";
+		var phone_num="";
+        var if_sort=false;
+        const now = Date.now();
+        const dt_12_to_24 = Date.parse('2023/12/16 23:00:00') - Date.parse('2023/12/16 11:00:00');
         $(document).ready( function () {
             
             // https://developers.google.com/chart/interactive/docs/quick_start
@@ -56,6 +59,7 @@
 
         function set_form_if_valid(response) {
             var flg = response.getDataTable().getFormattedValue(0,1);
+            if_sort = response.getDataTable().getFormattedValue(1,1)=="FALSE" ? false:true;
             if (flg=="FALSE") {
                  document.getElementById("forum").innerHTML=`<div><label for="phone_search">查詢報名訊息(請輸入手機號碼): &nbsp; </label>
 		 					     <input type="text" id="phone_search" name="phone_search" maxlength="10">
@@ -78,65 +82,102 @@
 
         function get_user(response){
             var data = response.getDataTable();
-	    console.log(data);
-	    // Log the data to the console
-	    if (data.getNumberOfRows()==0) {
-		    document.getElementById("forum").innerHTML=`<label style="color:red">查無資料，手機號 &nbsp; ${phone_num} &nbsp; 尚未註冊 </label>
-				    <br><br>
-				    <button onclick="check_valid();">立即註冊</button>`;
-	    } else {
-		    document.getElementById("forum").innerHTML=`<label for="phone">查詢報名訊息: &nbsp;&nbsp; </label>
-				    <input type="text" id="phone" name="phone" value="${phone_num}" disabled>
-				    <br><br>
-				    <label style="color:green">已註冊</label>
-				    <br>
-				    <label for="mail">註冊時間: &nbsp;&nbsp;&nbsp; </label>
-				    <input type="text" id="time" name="time" value="${data.getFormattedValue(0,0)}" size="32" disabled>
-				    <br>
-				    <label for="mail">註冊信箱:  &nbsp;&nbsp;&nbsp; </label>
-				    <input type="text" id="mail" name="mail" value="${data.getFormattedValue(0,1)}" size="32" disabled>
-				    <br><br>
-				    <button onclick="check_valid();">返回</button>`;
-	    }
+            console.log(data);
+            // Log the data to the console
+            if (data.getNumberOfRows()==0) {
+                document.getElementById("forum").innerHTML=`<label style="color:red">查無資料，手機號 &nbsp; ${phone_num} &nbsp; 尚未註冊 </label>
+                        <br><br>
+                        <button onclick="check_valid();">立即註冊</button>`;
+            } else {
+                document.getElementById("forum").innerHTML=`<label for="phone">查詢報名訊息: &nbsp;&nbsp; </label>
+                        <input type="text" id="phone" name="phone" value="${phone_num}" disabled>
+                        <br><br>
+                        <label style="color:green">已註冊</label>
+                        <br>
+                        <label for="mail">註冊時間: &nbsp;&nbsp;&nbsp; </label>
+                        <input type="text" id="time" name="time" value="${data.getFormattedValue(0,0)}" size="32" disabled>
+                        <br>
+                        <label for="mail">註冊信箱:  &nbsp;&nbsp;&nbsp; </label>
+                        <input type="text" id="mail" name="mail" value="${data.getFormattedValue(0,1)}" size="32" disabled>
+                        <br><br>
+                        <button onclick="check_valid();">返回</button>`;
+            }
         }
         
         function processSheetsData(response) {
             var data = response.getDataTable();
             var rows = data.getNumberOfRows();
-                const displayColumns = [0,1,2];
-                const titles = ['提交時間', '獲得分數／總分', '手機號碼'];
-                
+            const displayColumns = [0,1,2];
+            const titles = ['提交時間', '獲得分數／總分', '手機號碼'];
+            var str = `<br><br>`;
+
+            var fetched_data = [];
+            for (var r=1 ; r<rows ; r++) {
+                var pre_process_data = [];
+                for (var i = 0; i < displayColumns.length; i++) {
+                		var data_piece = data.getFormattedValue(r,displayColumns[i]);
+                		if(if_sort && i==0) {
+                        var dt = Date.parse(data_piece.replace("上午 ","").replace("下午 ",""));
+                        if(data_piece.includes("下午") && (new Date(dt).getHours() != 12))
+                    		dt += dt_12_to_24;
+                        if((now < Date.parse('2023/12/16 14:00:00') && dt > Date.parse('2023/12/16 13:59:59')) || (now > Date.parse('2023/12/16 13:59:59') && dt < Date.parse('2023/12/16 14:00:00')))
+                    		break;
+                    }
+                    pre_process_data.push(data_piece);
+                }
+                if (pre_process_data.length > 0)
+                	fetched_data.push(pre_process_data);
+            }
+            
             // 表格以DataTable呈現設定class="display order-column"
-            var str = `<table id="myTable" class="display order-column">
+            if(if_sort && (now < Date.parse('2023/12/16 14:00:00')))
+            	str += ` <h2> 第一場排名 </h2>`
+            else if (if_sort && (now > Date.parse('2023/12/16 13:59:59')))
+            	str += ` <h2> 第二場排名 </h2>`
+            str += ` <table id="myTable" class="display order-column">
                             <thead>
                                 <tr>`;
+            if(if_sort) {
+                fetched_data.sort( function (arr1,arr2){
+                    scoreCompare = parseInt(arr2[1].split(' / ')[0]) - parseInt(arr1[1].split(' / ')[0]);
+                    var arr1_dt = Date.parse(arr1[0].replace("上午 ","").replace("下午 ",""));
+                    var arr2_dt = Date.parse(arr2[0].replace("上午 ","").replace("下午 ",""));
+                    if(arr1[0].includes("下午") && (new Date(arr1_dt).getHours() != 12))
+                        arr1_dt += dt_12_to_24;
+                    if(arr2[0].includes("下午") && (new Date(arr2_dt).getHours() != 12))
+                        arr2_dt += dt_12_to_24;
+                    if (scoreCompare === 0) {
+                        return arr1_dt - arr2_dt;
+                    }
+                    return scoreCompare;
+                });
+                str += `<th><center>名次</center></th>`;
+            }
             // 此迴圈設定排行榜的表格標題
-                for (let c = 0; c < titles.length; c++) {
-                    str += `<th><center>${titles[c]}</center></th>`;
-                }
+            for (let c = 0; c < titles.length; c++) {
+                str += `<th><center>${titles[c]}</center></th>`;
+            }
             // 後續的Tag...........
-                str += `		</tr>
-                            </thead>
-                            <tbody>`;
-
+            str += `		</tr>
+                        </thead>
+                        <tbody>`;
+                
             // 此迴圈取得試算表第二列起的資料逐一安排呈現
-            for (var r=1 ; r<rows ; r++) {
+            for (var r=0, rank=1 ; r<fetched_data.length ; r++, rank++) {
                 str += '<tr>';
                     for (var i = 0; i < displayColumns.length; i++) {
-                        var c=displayColumns[i];    
-                // 試算表第r列的欄位12，內容為電子郵件地址，故加入mailto超連結
-                if (c==12)
-                            str += '<td><a href="mailto:' + data.getFormattedValue(r,c) + '" target="_blank">' + data.getFormattedValue(r,c) + '</a></td>';
-		else if(c==2)
-			    str += '<td>' + data.getFormattedValue(r,c).replace(/(0\d{3})\d{4}/,"$1****") + '</td>';
+                if(if_sort && i==0)
+                    str += '<td>' + rank + '</td>';
+                if(i==2)
+			        str += '<td>' + fetched_data[r][i].replace(/(0\d{3})\d{4}/,"$1****") + '</td>';
                 else
-                    str += '<td>' + data.getFormattedValue(r,c) + '</td>';		  
+                    str += '<td>' + fetched_data[r][i] + '</td>';		  
                 }
                 // 後續的Tag...
                 str += '</tr>';          
             }	  
             str += '</tbody></table>';
-            
+
             document.getElementById("demo").innerHTML = str;
 
             $('#myTable').DataTable({
@@ -146,6 +187,7 @@
                 ordering: false
             });
         }
+        
 	</script>
 </head>
 <body>
@@ -176,7 +218,7 @@
     <section class="text-center bg-light testimonials">
         <div class="container">
 	    <div id="forum"></div>
-            <div id="demo">加載中...</div> 
+        <div id="demo">加載中...</div> 
 	</div>
     </section>
     
